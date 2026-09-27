@@ -3,3 +3,6 @@ dist/
 .vercel/
 .agents/
 *.log
+
+.vercel
+.env*

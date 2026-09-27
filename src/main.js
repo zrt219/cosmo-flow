@@ -11,6 +11,9 @@ import { GalaxySwarm } from './renderers/GalaxySwarm.js';
 import { CosmicLabels } from './renderers/CosmicLabels.js';
 import { GalaxyClusters } from './renderers/GalaxyClusters.js';
 import { CosmicSkybox } from './renderers/CosmicSkybox.js';
+import { CameraController } from './camera/CameraController.js';
+import { GifRecorder } from './recorder/GifRecorder.js';
+import { RecordingDock } from './ui/RecordingDock.js';
 import { ControlPanel } from './ui/ControlPanel.js';
 
 class LaniakeaApp {
@@ -144,9 +147,14 @@ class LaniakeaApp {
     this.controls.maxDistance = 450;
     this.controls.minDistance = 15;
     this.controls.target.set(-10, 4, -8);
+
+    // Automated 3D camera controls & GIF/Video recorder
+    this.cameraController = new CameraController(this.camera, this.controls, this.renderer.domElement);
+    this.gifRecorder = new GifRecorder(this);
   }
 
   initUI() {
+    this.recordingDock = new RecordingDock(this);
     this.controlPanel = new ControlPanel(this);
     this.updateHUDStats();
   }
@@ -280,6 +288,11 @@ class LaniakeaApp {
         }
         this.isTransitioningCamera = false;
       }
+    }
+
+    // Update automated camera controller (auto-orbit & cinematic tour)
+    if (this.cameraController && !this.isTransitioningCamera) {
+      this.cameraController.update(delta);
     }
 
     this.controls.update();

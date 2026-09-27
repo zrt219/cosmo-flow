@@ -90,11 +90,16 @@ export class ControlPanel {
       });
     }
 
-    // 3. Camera & Viewpoints folder
-    this.cameraFolder = this.gui.addFolder('Camera & Viewpoints');
+    // 3. Camera & Automated 3D Orbit Studio folder
+    this.cameraFolder = this.gui.addFolder('Camera & Orbit Studio');
     this.cameraParams = {
       preset: 'Reference (Tully 2014)',
-      fov: this.app.camera?.fov ?? 46
+      fov: this.app.camera?.fov ?? 46,
+      autoOrbit: this.app.cameraController?.autoOrbit ?? true,
+      orbitSpeed: this.app.cameraController?.orbitSpeed ?? 0.45,
+      smartResume: this.app.cameraController?.smartResume ?? true,
+      smartResumeDelay: this.app.cameraController?.smartResumeDelay ?? 2.0,
+      tourDuration: this.app.cameraController?.tourDuration ?? 22.0
     };
 
     const presetList = [
@@ -122,13 +127,30 @@ export class ControlPanel {
         }
       });
 
-    // Fast-access action buttons in lil-gui
-    this.cameraFolder.add({ fn: () => this.applyPreset('Reference (Tully 2014)') }, 'fn').name('📷 Reference View');
-    this.cameraFolder.add({ fn: () => this.applyPreset('Coma Fountain Arch') }, 'fn').name('🌌 Coma Fountain');
-    this.cameraFolder.add({ fn: () => this.applyPreset('Virgo Cluster') }, 'fn').name('✨ Virgo Cluster');
-    this.cameraFolder.add({ fn: () => this.applyPreset('The Great Attractor Core') }, 'fn').name('🎯 Great Attractor');
-    this.cameraFolder.add({ fn: () => this.applyPreset('Top-Down Supergalactic Plane') }, 'fn').name('🌐 Top-Down Plane');
-    this.cameraFolder.add({ fn: () => this.applyPreset('Dipole Repeller Outflow') }, 'fn').name('💨 Dipole Repeller');
+    // 3D Automated Orbit & Tour Controls
+    this.cameraFolder.add(this.cameraParams, 'autoOrbit').name('🔄 360° Auto-Orbit').onChange(v => {
+      if (this.app.cameraController) this.app.cameraController.autoOrbit = v;
+    });
+    this.cameraFolder.add(this.cameraParams, 'orbitSpeed', 0.1, 2.0, 0.05).name('Orbit Speed').onChange(v => {
+      if (this.app.cameraController) this.app.cameraController.orbitSpeed = v;
+    });
+    this.cameraFolder.add(this.cameraParams, 'smartResume').name('Smart Resume').onChange(v => {
+      if (this.app.cameraController) this.app.cameraController.smartResume = v;
+    });
+    this.cameraFolder.add(this.cameraParams, 'smartResumeDelay', 0.5, 6.0, 0.5).name('Resume Delay (s)').onChange(v => {
+      if (this.app.cameraController) this.app.cameraController.smartResumeDelay = v;
+    });
+
+    // Tour Trigger
+    this.cameraFolder.add({ fn: () => this.app.cameraController?.toggleTour() }, 'fn').name('🎬 Toggle Cinematic Tour');
+
+    // GIF Recording Trigger
+    this.cameraFolder.add({
+      fn: () => {
+        const btn = document.getElementById('btn-record-gif');
+        if (btn) btn.click();
+      }
+    }, 'fn').name('🔴 Record 360° GIF');
 
     // 4. Streamlines & Coma Loops folder
     this.streamFolder = this.gui.addFolder('Streamlines & Flow');

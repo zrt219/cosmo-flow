@@ -9,8 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "three": "^0.174.0",
-    "lil-gui": "^0.20.0"
+    "gifenc": "^1.0.3",
+    "lil-gui": "^0.20.0",
+    "three": "^0.174.0"
   },
   "devDependencies": {
     "vite": "^6.2.0"
