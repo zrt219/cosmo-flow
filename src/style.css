@@ -1,0 +1,282 @@
+:root {
+  --bg-color: #05070c;
+  --hud-bg: rgba(10, 16, 26, 0.72);
+  --hud-border: rgba(64, 128, 200, 0.25);
+  --accent-cyan: #00e5ff;
+  --accent-orange: #ff9922;
+  --accent-green: #39e75f;
+  --text-main: #e2e8f0;
+  --text-muted: #8492a6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+}
+
+#canvas-container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Glassmorphism Observatory HUD */
+.hud-header {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 10;
+  background: var(--hud-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--hud-border);
+  border-radius: 12px;
+  padding: 16px 22px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  max-width: 480px;
+}
+
+.hud-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.hud-pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1.0; transform: scale(1.2); }
+}
+
+.hud-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.hud-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.hud-stats-row {
+  display: flex;
+  gap: 16px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  font-family: monospace;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+}
+
+/* Colormap Legend bar */
+.hud-legend {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legend-title {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.legend-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(
+    to right,
+    #140038 0%,
+    #052ea8 14%,
+    #00a7d9 28%,
+    #1ebf29 44%,
+    #c7d91a 62%,
+    #f59405 78%,
+    #d91e0d 92%,
+    #8c0514 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Bottom Presets Bar */
+.hud-bottom-bar {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+  background: var(--hud-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--hud-border);
+  padding: 8px 12px;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.preset-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #d1d5db;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.preset-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--accent-cyan);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.preset-btn.active {
+  background: var(--accent-cyan);
+  color: #05070c;
+  font-weight: 700;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
+}
+
+/* Celestial 2D/3D Badges */
+.cosmic-labels-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cosmic-badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(8, 12, 20, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  padding: 4px 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.2s;
+  pointer-events: auto;
+  cursor: default;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.badge-subtitle {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* lil-gui Custom Styling for Sleek Sci-Fi Dark Theme */
+.lil-gui {
+  --background-color: rgba(10, 16, 26, 0.85) !important;
+  --text-color: #d1d5db !important;
+  --title-background-color: rgba(18, 28, 45, 0.95) !important;
+  --widget-color: rgba(30, 42, 60, 0.9) !important;
+  --hover-color: rgba(0, 229, 255, 0.25) !important;
+  --focus-color: var(--accent-cyan) !important;
+  --number-color: var(--accent-cyan) !important;
+  --string-color: #64b5f6 !important;
+  font-family: inherit !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--hud-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  top: 20px !important;
+  right: 20px !important;
+}
+
+.lil-gui .title {
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  color: #fff !important;
+}

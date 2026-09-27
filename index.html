@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laniakea & Cosmic Web Velocity Flows 3D</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <!-- Main 3D WebGL Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- HUD Header & Scientific Metadata -->
+    <header class="hud-header">
+      <div class="hud-title-row">
+        <div class="hud-pulse"></div>
+        <h1 class="hud-title">Laniakea Cosmic Flow</h1>
+      </div>
+      <p class="hud-subtitle">
+        3D Peculiar Velocity Field & Cosmic Streamlines &bull; Tully et al. (Nature 2014) / Hoffman et al. (Dipole Repeller)
+      </p>
+
+      <div class="hud-stats-row">
+        <div class="stat-item">
+          <span class="stat-val" id="stat-streamlines">280</span>
+          <span class="stat-label">Streamlines</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val" id="stat-galaxies">16,000</span>
+          <span class="stat-label">Galaxies</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val" id="stat-arrows">1,400+</span>
+          <span class="stat-label">Velocity Cones</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val" id="stat-fps">60</span>
+          <span class="stat-label">FPS</span>
+        </div>
+      </div>
+
+      <!-- Scalar Potential Colormap Legend -->
+      <div class="hud-legend">
+        <div class="legend-title">
+          <span>Scalar Density / Velocity Potential &Phi;</span>
+          <span>-&nabla;&Phi; &rarr; Cosmic Flow</span>
+        </div>
+        <div class="legend-bar"></div>
+        <div class="legend-labels">
+          <span>Void / Repeller</span>
+          <span>Cosmic Web Filaments</span>
+          <span>Great Attractor</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Bottom View Presets Navigation -->
+    <nav class="hud-bottom-bar">
+      <button class="preset-btn active" id="btn-ref-view">
+        <span>📷</span> Reference View
+      </button>
+      <button class="preset-btn" id="btn-coma-view">
+        <span>🌌</span> Coma Fountain
+      </button>
+      <button class="preset-btn" id="btn-virgo-view">
+        <span>✨</span> Virgo Cluster
+      </button>
+      <button class="preset-btn" id="btn-top-view">
+        <span>🌐</span> Top-Down Plane
+      </button>
+      <button class="preset-btn" id="btn-attractor-view">
+        <span>🎯</span> Great Attractor Core
+      </button>
+      <button class="preset-btn" id="btn-repeller-view">
+        <span>💨</span> Dipole Repeller Outflow
+      </button>
+      <button class="preset-btn" id="btn-flow-toggle">
+        <span id="flow-icon">⏸</span> <span id="flow-text">Flowing</span>
+      </button>
+    </nav>
+
+    <!-- Main Entrypoint -->
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
