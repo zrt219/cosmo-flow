@@ -14,7 +14,7 @@ export class CameraController {
     this.autoOrbit = true;
     this.orbitSpeed = 0.45; // Radians per second multiplier
     this.smartResume = true;
-    this.smartResumeDelay = 2.0; // Seconds to wait after user stops dragging
+    this.smartResumeDelay = 3.5; // 3.5s pause after user interaction or preset selection
     this.lastUserInteractionTime = 0;
     this.isUserInteracting = false;
 
@@ -106,13 +106,15 @@ export class CameraController {
       // Relative spherical coordinate rotation
       const offset = new THREE.Vector3().subVectors(cam.position, target);
       const radius = Math.hypot(offset.x, offset.z);
-      let angle = Math.atan2(offset.z, offset.x);
 
-      angle += this.orbitSpeed * delta * 0.4;
+      if (radius > 2.0) {
+        let angle = Math.atan2(offset.z, offset.x);
+        angle += this.orbitSpeed * delta * 0.4;
 
-      cam.position.x = target.x + radius * Math.cos(angle);
-      cam.position.z = target.z + radius * Math.sin(angle);
-      cam.lookAt(target);
+        cam.position.x = target.x + radius * Math.cos(angle);
+        cam.position.z = target.z + radius * Math.sin(angle);
+        cam.lookAt(target);
+      }
     }
   }
 

@@ -27,9 +27,14 @@ class LaniakeaApp {
     this.fpsTimer = 0;
 
     // Camera animation target state
-    this.cameraTargetPos = new THREE.Vector3();
-    this.controlsTargetPos = new THREE.Vector3();
-    this.cameraTargetFov = 46;
+    this.cameraStartPos = new THREE.Vector3();
+    this.cameraEndPos = new THREE.Vector3();
+    this.targetStartPos = new THREE.Vector3();
+    this.targetEndPos = new THREE.Vector3();
+    this.fovStart = 46;
+    this.fovEnd = 46;
+    this.transitionTime = 0;
+    this.transitionDuration = 1.1;
     this.isTransitioningCamera = false;
 
     this.initScene();
@@ -39,12 +44,8 @@ class LaniakeaApp {
     this.initUI();
     this.initEventListeners();
 
-    // Start cinematic intro flythrough sequence
-    if (this.motionEngine) {
-      this.motionEngine.playIntroSequence();
-    } else {
-      this.setReferenceCamera(true);
-    }
+    // Start in standard Reference view
+    this.setReferenceCamera(true);
 
     this.animate = this.animate.bind(this);
     requestAnimationFrame(this.animate);
@@ -266,13 +267,20 @@ class LaniakeaApp {
       this.controls.target.copy(target);
       this.camera.fov = fov;
       this.camera.updateProjectionMatrix();
+      this.controls.enabled = true;
       this.controls.update();
       this.isTransitioningCamera = false;
     } else {
-      this.cameraTargetPos.copy(pos);
-      this.controlsTargetPos.copy(target);
-      this.cameraTargetFov = fov;
+      this.cameraStartPos.copy(this.camera.position);
+      this.cameraEndPos.copy(pos);
+      this.targetStartPos.copy(this.controls.target);
+      this.targetEndPos.copy(target);
+      this.fovStart = this.camera.fov;
+      this.fovEnd = fov;
+      this.transitionTime = 0;
+      this.transitionDuration = 1.1; // 1.1s crisp smooth glide
       this.isTransitioningCamera = true;
+      this.controls.enabled = false; // Disable controls while transitioning so OrbitControls doesn't fight the tween
     }
   }
 
@@ -385,40 +393,40 @@ class LaniakeaApp {
 
     // Smooth camera transition if active
     if (this.isTransitioningCamera) {
-      this.camera.position.lerp(this.cameraTargetPos, 0.06);
-      this.controls.target.lerp(this.controlsTargetPos, 0.06);
+      this.transitionTime += delta;
+      const progress = Math.min(this.transitionTime / this.transitionDuration, 1.0);
 
-      if (this.cameraTargetFov && Math.abs(this.camera.fov - this.cameraTargetFov) > 0.01) {
-        this.camera.fov = THREE.MathUtils.lerp(this.camera.fov, this.cameraTargetFov, 0.06);
+      // Damped cubic Hermite easing curve (fast responsive start, smooth settling)
+      const easeT = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      this.camera.position.lerpVectors(this.cameraStartPos, this.cameraEndPos, easeT);
+      this.controls.target.lerpVectors(this.targetStartPos, this.targetEndPos, easeT);
+      this.camera.fov = THREE.MathUtils.lerp(this.fovStart, this.fovEnd, easeT);
+      this.camera.updateProjectionMatrix();
+      this.camera.lookAt(this.controls.target);
+
+      if (progress >= 1.0) {
+        this.camera.position.copy(this.cameraEndPos);
+        this.controls.target.copy(this.targetEndPos);
+        this.camera.fov = this.fovEnd;
         this.camera.updateProjectionMatrix();
-      }
-
-      if (
-        this.camera.position.distanceTo(this.cameraTargetPos) < 0.5 &&
-        this.controls.target.distanceTo(this.controlsTargetPos) < 0.5 &&
-        (!this.cameraTargetFov || Math.abs(this.camera.fov - this.cameraTargetFov) < 0.2)
-      ) {
-        this.camera.position.copy(this.cameraTargetPos);
-        this.controls.target.copy(this.controlsTargetPos);
-        if (this.cameraTargetFov) {
-          this.camera.fov = this.cameraTargetFov;
-          this.camera.updateProjectionMatrix();
-        }
+        this.controls.enabled = true;
+        this.controls.update();
         this.isTransitioningCamera = false;
       }
-    }
-
-    // Update automated camera controller (auto-orbit & cinematic tour) when not transitioning or in intro
-    if (this.cameraController && !this.isTransitioningCamera && !this.motionEngine?.introActive) {
+    } else if (this.cameraController && !this.motionEngine?.introActive) {
       this.cameraController.update(delta);
+      this.controls.update();
+    } else if (!this.motionEngine?.introActive) {
+      this.controls.update();
     }
 
-    // Update MotionEngine camera intro
+    // Update MotionEngine if active
     if (this.motionEngine) {
       this.motionEngine.update(delta);
     }
-
-    this.controls.update();
 
     // Density slice plane shader pulse update
     if (this.slicePlaneMesh) {
