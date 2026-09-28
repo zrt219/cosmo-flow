@@ -32,7 +32,8 @@ export class SlicePlaneMesh {
       uMinPot: { value: -140.0 },
       uMaxPot: { value: 80.0 },
       uContourLines: { value: 1.0 },
-      uBrightness: { value: 1.05 }
+      uBrightness: { value: 1.05 },
+      uTime: { value: 0.0 }
     };
 
     const vertexShader = `
@@ -58,6 +59,7 @@ export class SlicePlaneMesh {
       uniform float uMaxPot;
       uniform float uContourLines;
       uniform float uBrightness;
+      uniform float uTime;
 
       varying vec3 vWorldPosition;
       varying vec2 vUv;
@@ -134,6 +136,13 @@ export class SlicePlaneMesh {
         vec2 edgeDist = abs(vUv - 0.5) * 2.0;
         float edgeAlpha = 1.0 - smoothstep(0.92, 1.0, max(edgeDist.x, edgeDist.y));
 
+        // Soft radial glow wave from Great Attractor
+        vec3 gaWorldPos = vec3(-38.0, 0.0, -5.0);
+        float distToGA = distance(p.xz, gaWorldPos.xz);
+        float wave = sin(distToGA * 0.15 - uTime * 0.8) * 0.5 + 0.5;
+        float waveMask = smoothstep(60.0, 10.0, distToGA);
+        color += vec3(0.08, 0.04, 0.0) * wave * waveMask;
+
         gl_FragColor = vec4(color, uOpacity * edgeAlpha);
       }
     `;
@@ -189,7 +198,10 @@ export class SlicePlaneMesh {
     this.uniforms.uAttractorCount.value = shaderData.uAttractorCount;
   }
 
-  update() {
+  update(elapsed) {
     this.updateUniforms();
+    if (typeof elapsed === 'number') {
+      this.uniforms.uTime.value = elapsed;
+    }
   }
 }

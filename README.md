@@ -113,6 +113,22 @@ Built-in client-side recording studio powered by `gifenc`:
 
 ---
 
+### 9. Motion Design & Animation System (Powered by Motion One)
+
+Integrated Motion One spring-physics animation suite delivering broadcast-quality polish:
+- **Epic Flythrough Intro (5.2s)**: Full-black title card with staggered letter reveals, zooming seamlessly from the deep Great Attractor core ($X \approx -38, Y \approx 2, Z \approx -5$) out to the Tully et al. (Nature 2014) reference overview.
+- **Staggered HUD & Stat Counters**: Glassmorphic headers and bottom bars slide in with damped spring physics while cosmological counters (streamline count, galaxy density, velocity cones) smoothly tick up in real time.
+- **12 Billboard Label Spring Entrances**: Progressively pop in with 60ms staggered delay across the 3D supercluster volume.
+- **Continuous Living Oscillations**:
+  - *Great Attractor Pulse*: Dedicated slow, rhythmic expansion breathing glow at the convergence hub.
+  - *Cluster Sphere Breathing*: Gentle asynchronous scale oscillation across all 20+ cluster nodes.
+  - *Galaxy Swarm Shimmer*: Vertex-level size and brightness twinkle using GPU hash noise.
+  - *Heatmap Slice Wave*: Radial glow wave propagating outward from the Great Attractor across the supergalactic plane.
+  - *Streamline Dash Flow*: Moving line dashes simulating continuous particle flow along velocity gradients.
+- **Spring Physics Micro-Interactions**: Bouncy haptic feedback on preset buttons, floating recording dock, and preview modal blur transitions.
+
+---
+
 ## 🛠 Project Architecture
 
 ```
@@ -120,6 +136,8 @@ cosmo-flow/
 ├── src/
 │   ├── camera/
 │   │   └── CameraController.js     # Auto-orbit, smart resume & cinematic tours
+│   ├── motion/
+│   │   └── MotionEngine.js         # Motion One spring orchestrator & intro director
 │   ├── physics/
 │   │   └── CosmicField.js          # Potential field math & RK4 numerical tracer
 │   ├── recorder/
@@ -128,16 +146,16 @@ cosmo-flow/
 │   │   ├── ClusterEllipsoids.js    # 3D shaded cluster spheres
 │   │   ├── CosmicLabels.js         # 12 camera-facing 3D billboard labels
 │   │   ├── CosmicSkybox.js         # Distant starry cosmos & reference axes
-│   │   ├── GalaxyClusters.js       # Cluster node meshes
-│   │   ├── GalaxySwarm.js          # 18,000+ filamentary galaxy particles
-│   │   ├── SlicePlaneMesh.js       # GPU GLSL potential colormap shader slice
-│   │   └── StreamlineRenderer.js   # Cosmic streamlines, cones & Coma loops
+│   │   ├── GalaxyClusters.js       # Cluster node meshes with breathing physics
+│   │   ├── GalaxySwarm.js          # 18,000+ filamentary galaxy particles with shimmer
+│   │   ├── SlicePlaneMesh.js       # GPU GLSL potential colormap shader with wave pulse
+│   │   └── StreamlineRenderer.js   # Cosmic streamlines, cones & flowing dashes
 │   ├── ui/
 │   │   ├── ControlPanel.js         # lil-gui astrophysical parameter studio
-│   │   ├── RecorderModal.js        # GIF/WebM preview & download dialog
+│   │   ├── RecorderModal.js        # GIF/WebM preview & download spring dialog
 │   │   └── RecordingDock.js        # Floating HUD recording studio dock
-│   ├── main.js                     # Three.js scene loop & postprocessing
-│   └── style.css                   # Glassmorphic observatory HUD styling
+│   ├── main.js                     # Three.js scene loop, postprocessing & motion loop
+│   └── style.css                   # Glassmorphic observatory HUD & motion design styling
 ├── docs/
 │   └── assets/                     # 8 Section GIFs + Hero Banner
 ├── index.html                      # Viewport container & scientific HUD

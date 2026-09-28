@@ -324,42 +324,49 @@ export class ControlPanel {
 
     if (btnRef) {
       btnRef.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRef);
         this.applyPreset('Reference (Tully 2014)');
       });
     }
 
     if (btnComa) {
       btnComa.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnComa);
         this.applyPreset('Coma Fountain Arch');
       });
     }
 
     if (btnVirgo) {
       btnVirgo.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnVirgo);
         this.applyPreset('Virgo Cluster');
       });
     }
 
     if (btnTop) {
       btnTop.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnTop);
         this.applyPreset('Top-Down Supergalactic Plane');
       });
     }
 
     if (btnAttractor) {
       btnAttractor.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnAttractor);
         this.applyPreset('The Great Attractor Core');
       });
     }
 
     if (btnRepeller) {
       btnRepeller.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRepeller);
         this.applyPreset('Dipole Repeller Outflow');
       });
     }
 
     if (btnFlow) {
       btnFlow.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animateButtonPress(btnFlow);
         const nextState = !this.app.streamlineRenderer.isAnimated;
         this.app.streamlineRenderer.isAnimated = nextState;
         if (this.streamParams) this.streamParams.isAnimated = nextState;

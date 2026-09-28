@@ -415,19 +415,32 @@ export class GalaxyClusters {
   update(elapsed) {
     if (!this.group.visible) return;
 
-    if (this.pulseEnabled) {
-      const pulse = 1.0 + Math.sin(elapsed * 1.8) * 0.035;
-      for (let i = 0; i < this.clusters.length; i++) {
-        const c = this.clusters[i];
-        const mesh = this.meshes[i];
-        if (mesh) {
-          mesh.scale.set(
-            c.radius * c.scale[0] * this.scaleMultiplier * pulse,
-            c.radius * c.scale[1] * this.scaleMultiplier * pulse,
-            c.radius * c.scale[2] * this.scaleMultiplier * pulse
-          );
-        }
-      }
+    // Gentle breathing oscillation — always active for living feel
+    for (let i = 0; i < this.clusters.length; i++) {
+      const c = this.clusters[i];
+      const mesh = this.meshes[i];
+      if (!mesh) continue;
+
+      // Each cluster gets a unique phase offset based on index
+      const phase = i * 0.47;
+      // Great Attractor gets a stronger, slower pulse (breathing glow)
+      const isGA = c.id === 'great-attractor';
+      const amplitude = isGA ? 0.055 : 0.025;
+      const speed = isGA ? 1.2 : 1.8;
+      const breathe = 1.0 + Math.sin(elapsed * speed + phase) * amplitude;
+
+      // Additional pulse layer when pulse mode is explicitly enabled
+      const extraPulse = this.pulseEnabled
+        ? 1.0 + Math.sin(elapsed * 2.8 + phase * 0.3) * 0.035
+        : 1.0;
+
+      const totalScale = breathe * extraPulse;
+
+      mesh.scale.set(
+        c.radius * c.scale[0] * this.scaleMultiplier * totalScale,
+        c.radius * c.scale[1] * this.scaleMultiplier * totalScale,
+        c.radius * c.scale[2] * this.scaleMultiplier * totalScale
+      );
     }
   }
 

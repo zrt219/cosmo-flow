@@ -15,6 +15,7 @@ import { CameraController } from './camera/CameraController.js';
 import { GifRecorder } from './recorder/GifRecorder.js';
 import { RecordingDock } from './ui/RecordingDock.js';
 import { ControlPanel } from './ui/ControlPanel.js';
+import { MotionEngine } from './motion/MotionEngine.js';
 
 class LaniakeaApp {
   constructor() {
@@ -38,8 +39,12 @@ class LaniakeaApp {
     this.initUI();
     this.initEventListeners();
 
-    // Set initial camera matching reference image exactly
-    this.setReferenceCamera(true);
+    // Start cinematic intro flythrough sequence
+    if (this.motionEngine) {
+      this.motionEngine.playIntroSequence();
+    } else {
+      this.setReferenceCamera(true);
+    }
 
     this.animate = this.animate.bind(this);
     requestAnimationFrame(this.animate);
@@ -154,6 +159,7 @@ class LaniakeaApp {
   }
 
   initUI() {
+    this.motionEngine = new MotionEngine(this);
     this.recordingDock = new RecordingDock(this);
     this.controlPanel = new ControlPanel(this);
     this.updateHUDStats();
@@ -290,12 +296,22 @@ class LaniakeaApp {
       }
     }
 
-    // Update automated camera controller (auto-orbit & cinematic tour)
-    if (this.cameraController && !this.isTransitioningCamera) {
+    // Update automated camera controller (auto-orbit & cinematic tour) when not transitioning or in intro
+    if (this.cameraController && !this.isTransitioningCamera && !this.motionEngine?.introActive) {
       this.cameraController.update(delta);
     }
 
+    // Update MotionEngine camera intro
+    if (this.motionEngine) {
+      this.motionEngine.update(delta);
+    }
+
     this.controls.update();
+
+    // Density slice plane shader pulse update
+    if (this.slicePlaneMesh) {
+      this.slicePlaneMesh.update(elapsed);
+    }
 
     // Streamline flow animation
     this.streamlineRenderer.animate(delta, elapsed);

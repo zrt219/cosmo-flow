@@ -2,7 +2,8 @@
  * RecorderModal displays the generated GIF / WebM preview with instant download buttons
  */
 export class RecorderModal {
-  constructor() {
+  constructor(app = null) {
+    this.app = app;
     this.createDOM();
   }
 
@@ -92,10 +93,18 @@ export class RecorderModal {
     if (metaDuration) metaDuration.textContent = `${result.duration}s`;
     if (metaSize) metaSize.textContent = `${result.sizeKB} KB`;
 
-    this.modalOverlay.style.display = 'flex';
+    if (this.app?.motionEngine) {
+      this.app.motionEngine.showModal(this.modalOverlay);
+    } else {
+      this.modalOverlay.style.display = 'flex';
+    }
   }
 
   hide() {
-    this.modalOverlay.style.display = 'none';
+    if (this.app?.motionEngine) {
+      this.app.motionEngine.hideModal(this.modalOverlay);
+    } else {
+      this.modalOverlay.style.display = 'none';
+    }
   }
 }

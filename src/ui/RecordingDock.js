@@ -7,7 +7,7 @@ import { RecorderModal } from './RecorderModal.js';
 export class RecordingDock {
   constructor(app) {
     this.app = app;
-    this.modal = new RecorderModal();
+    this.modal = new RecorderModal(this.app);
 
     this.duration = 4.0;
     this.resolution = 640;
@@ -94,6 +94,7 @@ export class RecordingDock {
     // 1. Auto-Orbit toggle
     if (btnOrbit) {
       btnOrbit.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animateButtonPress(btnOrbit);
         const nextState = !this.app.cameraController.autoOrbit;
         this.app.cameraController.autoOrbit = nextState;
         btnOrbit.classList.toggle('active', nextState);
@@ -104,6 +105,7 @@ export class RecordingDock {
     // 2. Cinematic Tour toggle
     if (btnTour) {
       btnTour.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animateButtonPress(btnTour);
         const isActive = this.app.cameraController.toggleTour();
         btnTour.classList.toggle('active', isActive);
         txtTour.textContent = isActive ? 'Stop Tour' : 'Cinematic Tour';
@@ -117,16 +119,14 @@ export class RecordingDock {
     // 3. Duration & Resolution pills
     document.querySelectorAll('.rec-pill[data-dur]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.rec-pill[data-dur]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        if (this.app.motionEngine) this.app.motionEngine.animatePillSelect(btn, btn.parentElement);
         this.duration = parseFloat(btn.getAttribute('data-dur'));
       });
     });
 
     document.querySelectorAll('.rec-pill[data-res]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.rec-pill[data-res]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        if (this.app.motionEngine) this.app.motionEngine.animatePillSelect(btn, btn.parentElement);
         this.resolution = parseInt(btn.getAttribute('data-res'), 10);
       });
     });
@@ -135,11 +135,16 @@ export class RecordingDock {
     if (btnRecord) {
       btnRecord.addEventListener('click', async () => {
         if (this.app.gifRecorder.isRecording) return;
+        if (this.app.motionEngine) this.app.motionEngine.animateRecordingDock('startRecording');
 
         btnRecord.disabled = true;
         btnRecord.classList.add('recording');
         txtRecord.textContent = 'Recording...';
-        progressContainer.style.display = 'block';
+        if (this.app.motionEngine) {
+          this.app.motionEngine.animateRecordingDock('showProgress');
+        } else {
+          progressContainer.style.display = 'block';
+        }
         if (statusEl) {
           statusEl.textContent = 'Recording';
           statusEl.classList.add('recording');

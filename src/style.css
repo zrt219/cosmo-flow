@@ -649,3 +649,123 @@ body, html {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.3);
 }
+
+/* ==========================================================================
+   Motion Design System — Intro, Transitions & Micro-interactions
+   ========================================================================== */
+
+/* Intro Overlay — Epic Flythrough Title Card */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 200;
+  background: #020306;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.intro-title {
+  font-size: 4.5rem;
+  font-weight: 800;
+  letter-spacing: 18px;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 0 40px rgba(0, 229, 255, 0.4), 0 0 80px rgba(0, 229, 255, 0.15);
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.intro-subtitle {
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 16px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Great Attractor Pulsing Glow Effect */
+.ga-glow-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 185, 60, 0.3);
+  box-shadow: 0 0 30px rgba(255, 185, 60, 0.15), inset 0 0 20px rgba(255, 185, 60, 0.1);
+  pointer-events: none;
+  animation: ga-pulse 3s ease-in-out infinite;
+}
+
+@keyframes ga-pulse {
+  0%, 100% { transform: scale(0.95); opacity: 0.4; }
+  50% { transform: scale(1.08); opacity: 0.8; }
+}
+
+/* Motion-enhanced button press feedback */
+.preset-btn.motion-press {
+  transition: none !important;
+}
+
+/* Smooth pill selection glow */
+.rec-pill.motion-active {
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+}
+
+/* Recording dock entrance animation initial state */
+.rec-dock-panel.motion-hidden {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+/* HUD entrance animation initial states */
+.hud-header.motion-hidden {
+  opacity: 0;
+  transform: translate(-30px, -20px);
+}
+
+.hud-bottom-bar.motion-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* Stat counter ticker animation */
+.stat-val.counting {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+/* Enhanced modal spring entrance */
+.rec-modal-card.motion-enter {
+  animation: none !important;
+}
+
+/* Label spring-in keyframe for CSS fallback */
+@keyframes label-spring-in {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 0.9; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Control panel smooth reveal */
+.lil-gui.motion-reveal {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* Responsive adjustments for intro */
+@media (max-width: 768px) {
+  .intro-title {
+    font-size: 2.8rem;
+    letter-spacing: 10px;
+  }
+  .intro-subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 4px;
+  }
+}

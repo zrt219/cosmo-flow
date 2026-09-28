@@ -332,11 +332,15 @@ export class GalaxySwarm {
     const vertexShader = `
       attribute float size;
       varying vec3 vColor;
+      uniform float uTime;
 
       void main() {
         vColor = color;
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = size * (270.0 / -mvPosition.z);
+        // Subtle shimmer: each particle gets unique phase from position hash
+        float phase = fract(sin(dot(position.xz, vec2(12.9898, 78.233))) * 43758.5453);
+        float shimmer = 1.0 + 0.15 * sin(uTime * 1.8 + phase * 6.283);
+        gl_PointSize = size * shimmer * (270.0 / -mvPosition.z);
         gl_Position = projectionMatrix * mvPosition;
       }
     `;
@@ -344,12 +348,15 @@ export class GalaxySwarm {
     const fragmentShader = `
       uniform sampler2D uTexture;
       uniform float uOpacity;
+      uniform float uTime;
       varying vec3 vColor;
 
       void main() {
         vec4 texColor = texture2D(uTexture, gl_PointCoord);
         if (texColor.a < 0.05) discard;
-        gl_FragColor = vec4(vColor * texColor.rgb, texColor.a * uOpacity);
+        // Subtle brightness variation
+        float flicker = 0.95 + 0.05 * sin(uTime * 2.5 + gl_FragCoord.x * 0.1);
+        gl_FragColor = vec4(vColor * texColor.rgb * flicker, texColor.a * uOpacity);
       }
     `;
 
@@ -358,7 +365,8 @@ export class GalaxySwarm {
       fragmentShader,
       uniforms: {
         uTexture: { value: this.particleTexture },
-        uOpacity: { value: this.opacity }
+        uOpacity: { value: this.opacity },
+        uTime: { value: 0.0 }
       },
       transparent: true,
       depthWrite: false,

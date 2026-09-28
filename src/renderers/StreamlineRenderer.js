@@ -219,15 +219,19 @@ export class StreamlineRenderer {
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
-    this.lineMaterial = new THREE.LineBasicMaterial({
+    this.lineMaterial = new THREE.LineDashedMaterial({
       vertexColors: true,
       transparent: true,
       opacity: this.lineOpacity,
       blending: THREE.NormalBlending,
-      linewidth: 1
+      linewidth: 1,
+      dashSize: 3.0,
+      gapSize: 1.5,
+      scale: 1.0
     });
 
     this.lineSegmentsMesh = new THREE.LineSegments(geometry, this.lineMaterial);
+    this.lineSegmentsMesh.computeLineDistances();
     this.group.add(this.lineSegmentsMesh);
   }
 
@@ -373,6 +377,11 @@ export class StreamlineRenderer {
   animate(delta, elapsed) {
     if (this.isAnimated && this.showArrows) {
       this.updateArrowTransforms(elapsed);
+    }
+
+    // Animate dash offset for flowing streamline effect
+    if (this.isAnimated && this.lineMaterial && this.lineMaterial.dashOffset !== undefined) {
+      this.lineMaterial.dashOffset = -(elapsed * this.flowSpeed * 2.0);
     }
   }
 
