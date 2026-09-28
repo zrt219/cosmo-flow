@@ -162,31 +162,41 @@ body, html {
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10;
+  z-index: 50;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   background: var(--hud-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--hud-border);
   padding: 8px 12px;
   border-radius: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  max-width: 94vw;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hud-bottom-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .preset-btn {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #d1d5db;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .preset-btn:hover {

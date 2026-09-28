@@ -175,12 +175,92 @@ class LaniakeaApp {
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
       this.composer.setSize(w, h);
     });
+
+    // 3D Raycasting: Click any 3D label or cluster sphere to zoom straight to it
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let downPos = { x: 0, y: 0 };
+
+    this.renderer.domElement.addEventListener('pointerdown', (e) => {
+      downPos = { x: e.clientX, y: e.clientY };
+    });
+
+    this.renderer.domElement.addEventListener('pointerup', (e) => {
+      const distMoved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
+      if (distMoved > 6) return; // Ignore drag interactions
+
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, this.camera);
+
+      // Check 3D billboard labels
+      if (this.cosmicLabels?.labels) {
+        const sprites = this.cosmicLabels.labels.map(l => l.sprite).filter(Boolean);
+        const intersects = raycaster.intersectObjects(sprites);
+        if (intersects.length > 0) {
+          const clickedSprite = intersects[0].object;
+          const found = this.cosmicLabels.labels.find(l => l.sprite === clickedSprite);
+          if (found) {
+            this.zoomToLocation(found.name, found.centroid || found.pos);
+            return;
+          }
+        }
+      }
+
+      // Check 3D galaxy cluster spheres
+      if (this.galaxyClusters?.meshes) {
+        const intersects = raycaster.intersectObjects(this.galaxyClusters.meshes);
+        if (intersects.length > 0) {
+          const clickedMesh = intersects[0].object;
+          const clusterName = clickedMesh.name || clickedMesh.userData?.name;
+          if (clusterName) {
+            this.zoomToLocation(clusterName, clickedMesh.position);
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * Universal location zoom resolver matching astronomical names to viewpoints
+   */
+  zoomToLocation(name, targetPos) {
+    const q = (name || '').toLowerCase();
+    if (q.includes('great attractor') || q.includes('norma')) {
+      this.controlPanel?.applyPreset('The Great Attractor Core');
+    } else if (q.includes('coma')) {
+      this.controlPanel?.applyPreset('Coma Fountain Arch');
+    } else if (q.includes('virgo')) {
+      this.controlPanel?.applyPreset('Virgo Cluster');
+    } else if (q.includes('centaurus')) {
+      this.controlPanel?.applyPreset('Centaurus Cluster Core');
+    } else if (q.includes('milky way')) {
+      this.controlPanel?.applyPreset('Milky Way / Local Group');
+    } else if (q.includes('hydra')) {
+      this.controlPanel?.applyPreset('Hydra Cluster');
+    } else if (q.includes('antlia')) {
+      this.controlPanel?.applyPreset('Antlia Cluster');
+    } else if (q.includes('repeller')) {
+      this.controlPanel?.applyPreset('Dipole Repeller Outflow');
+    } else if (targetPos) {
+      const camPos = new THREE.Vector3().copy(targetPos).add(new THREE.Vector3(12, 14, 22));
+      this.setCameraView(camPos, targetPos, 40);
+    }
   }
 
   /**
    * Helper to set camera viewpoint and controls target with smooth lerp transition and FOV.
    */
   setCameraView(pos, target, fov = 46, instant = false) {
+    if (this.motionEngine) {
+      this.motionEngine.stopIntro();
+    }
+    if (this.cameraController) {
+      this.cameraController.stopTour();
+      this.cameraController.lastUserInteractionTime = performance.now() / 1000.0;
+    }
+
     if (instant) {
       this.camera.position.copy(pos);
       this.controls.target.copy(target);
@@ -239,7 +319,39 @@ class LaniakeaApp {
   }
 
   /**
-   * 6. Dipole Repeller Outflow View:
+   * 6. Centaurus Cluster Core View:
+   * Position (-52, 22, 18), LookAt (-34, 6, 2), FOV 42.
+   */
+  setCentaurusCamera(instant = false) {
+    this.setCameraView(new THREE.Vector3(-52, 22, 18), new THREE.Vector3(-34, 6, 2), 42, instant);
+  }
+
+  /**
+   * 7. Milky Way / Local Group View:
+   * Position (-2, 12, 24), LookAt (-10, -1, 4), FOV 38.
+   */
+  setMilkyWayCamera(instant = false) {
+    this.setCameraView(new THREE.Vector3(-2, 12, 24), new THREE.Vector3(-10, -1, 4), 38, instant);
+  }
+
+  /**
+   * 8. Hydra Cluster View:
+   * Position (-12, 20, 36), LookAt (-24, 8, 18), FOV 40.
+   */
+  setHydraCamera(instant = false) {
+    this.setCameraView(new THREE.Vector3(-12, 20, 36), new THREE.Vector3(-24, 8, 18), 40, instant);
+  }
+
+  /**
+   * 9. Antlia Cluster View:
+   * Position (-6, 16, 40), LookAt (-18, 5, 22), FOV 40.
+   */
+  setAntliaCamera(instant = false) {
+    this.setCameraView(new THREE.Vector3(-6, 16, 40), new THREE.Vector3(-18, 5, 22), 40, instant);
+  }
+
+  /**
+   * 10. Dipole Repeller Outflow View:
    * Position (60, 20, 45), LookAt (32, -4, 18), FOV 48.
    */
   setRepellerCamera(instant = false) {

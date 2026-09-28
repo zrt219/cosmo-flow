@@ -104,11 +104,15 @@ export class ControlPanel {
 
     const presetList = [
       'Reference (Tully 2014)',
-      'Coma Fountain Arch',
-      'Virgo Cluster',
       'The Great Attractor Core',
-      'Top-Down Supergalactic Plane',
-      'Dipole Repeller Outflow'
+      'Virgo Cluster',
+      'Coma Fountain Arch',
+      'Centaurus Cluster Core',
+      'Milky Way / Local Group',
+      'Hydra Cluster',
+      'Antlia Cluster',
+      'Dipole Repeller Outflow',
+      'Top-Down Supergalactic Plane'
     ];
 
     this.presetController = this.cameraFolder.add(this.cameraParams, 'preset', presetList)
@@ -266,17 +270,33 @@ export class ControlPanel {
         if (this.app.setReferenceCamera) this.app.setReferenceCamera();
         this.setActiveHUDButton('btn-ref-view');
         break;
-      case 'Coma Fountain Arch':
-        if (this.app.setComaCamera) this.app.setComaCamera();
-        this.setActiveHUDButton('btn-coma-view');
+      case 'The Great Attractor Core':
+        if (this.app.setAttractorCamera) this.app.setAttractorCamera();
+        this.setActiveHUDButton('btn-attractor-view');
         break;
       case 'Virgo Cluster':
         if (this.app.setVirgoCamera) this.app.setVirgoCamera();
         this.setActiveHUDButton('btn-virgo-view');
         break;
-      case 'The Great Attractor Core':
-        if (this.app.setAttractorCamera) this.app.setAttractorCamera();
-        this.setActiveHUDButton('btn-attractor-view');
+      case 'Coma Fountain Arch':
+        if (this.app.setComaCamera) this.app.setComaCamera();
+        this.setActiveHUDButton('btn-coma-view');
+        break;
+      case 'Centaurus Cluster Core':
+        if (this.app.setCentaurusCamera) this.app.setCentaurusCamera();
+        this.setActiveHUDButton('btn-centaurus-view');
+        break;
+      case 'Milky Way / Local Group':
+        if (this.app.setMilkyWayCamera) this.app.setMilkyWayCamera();
+        this.setActiveHUDButton('btn-milkyway-view');
+        break;
+      case 'Hydra Cluster':
+        if (this.app.setHydraCamera) this.app.setHydraCamera();
+        this.setActiveHUDButton('btn-hydra-view');
+        break;
+      case 'Antlia Cluster':
+        if (this.app.setAntliaCamera) this.app.setAntliaCamera();
+        this.setActiveHUDButton('btn-antlia-view');
         break;
       case 'Top-Down Supergalactic Plane':
         if (this.app.setTopDownCamera) this.app.setTopDownCamera();
@@ -315,38 +335,21 @@ export class ControlPanel {
     if (typeof document === 'undefined') return;
 
     const btnRef = document.getElementById('btn-ref-view');
-    const btnComa = document.getElementById('btn-coma-view');
-    const btnVirgo = document.getElementById('btn-virgo-view');
-    const btnTop = document.getElementById('btn-top-view');
     const btnAttractor = document.getElementById('btn-attractor-view');
+    const btnVirgo = document.getElementById('btn-virgo-view');
+    const btnComa = document.getElementById('btn-coma-view');
+    const btnCentaurus = document.getElementById('btn-centaurus-view');
+    const btnMilkyWay = document.getElementById('btn-milkyway-view');
+    const btnHydra = document.getElementById('btn-hydra-view');
+    const btnAntlia = document.getElementById('btn-antlia-view');
     const btnRepeller = document.getElementById('btn-repeller-view');
+    const btnTop = document.getElementById('btn-top-view');
     const btnFlow = document.getElementById('btn-flow-toggle');
 
     if (btnRef) {
       btnRef.addEventListener('click', () => {
         if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRef);
         this.applyPreset('Reference (Tully 2014)');
-      });
-    }
-
-    if (btnComa) {
-      btnComa.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnComa);
-        this.applyPreset('Coma Fountain Arch');
-      });
-    }
-
-    if (btnVirgo) {
-      btnVirgo.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnVirgo);
-        this.applyPreset('Virgo Cluster');
-      });
-    }
-
-    if (btnTop) {
-      btnTop.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnTop);
-        this.applyPreset('Top-Down Supergalactic Plane');
       });
     }
 
@@ -357,10 +360,59 @@ export class ControlPanel {
       });
     }
 
+    if (btnVirgo) {
+      btnVirgo.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnVirgo);
+        this.applyPreset('Virgo Cluster');
+      });
+    }
+
+    if (btnComa) {
+      btnComa.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnComa);
+        this.applyPreset('Coma Fountain Arch');
+      });
+    }
+
+    if (btnCentaurus) {
+      btnCentaurus.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnCentaurus);
+        this.applyPreset('Centaurus Cluster Core');
+      });
+    }
+
+    if (btnMilkyWay) {
+      btnMilkyWay.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnMilkyWay);
+        this.applyPreset('Milky Way / Local Group');
+      });
+    }
+
+    if (btnHydra) {
+      btnHydra.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnHydra);
+        this.applyPreset('Hydra Cluster');
+      });
+    }
+
+    if (btnAntlia) {
+      btnAntlia.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnAntlia);
+        this.applyPreset('Antlia Cluster');
+      });
+    }
+
     if (btnRepeller) {
       btnRepeller.addEventListener('click', () => {
         if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRepeller);
         this.applyPreset('Dipole Repeller Outflow');
+      });
+    }
+
+    if (btnTop) {
+      btnTop.addEventListener('click', () => {
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnTop);
+        this.applyPreset('Top-Down Supergalactic Plane');
       });
     }
 

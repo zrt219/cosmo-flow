@@ -12,23 +12,9 @@ export class MotionEngine {
     this.hudBottomBar = document.querySelector('.hud-bottom-bar');
     this.recDockPanel = document.querySelector('.rec-dock-panel');
 
-    // Initially hide UI for intro flythrough
-    if (this.hudHeader) {
-      this.hudHeader.style.opacity = '0';
-      this.hudHeader.style.transform = 'translate(-30px, -20px)';
-    }
-    if (this.hudBottomBar) {
-      this.hudBottomBar.style.opacity = '0';
-      this.hudBottomBar.style.transform = 'translate(-50%, 40px)';
-    }
-    if (this.recDockPanel) {
-      this.recDockPanel.style.opacity = '0';
-      this.recDockPanel.style.transform = 'translateX(40px)';
-    }
-
     this.introActive = false;
     this.introProgress = 0;
-    this.introDuration = 5.2; // 5.2 seconds epic flythrough
+    this.introDuration = 4.2; // Smooth 4.2s flythrough
 
     // Intro camera parameters starting deep at Great Attractor core zooming out to reference
     this.startPos = new THREE.Vector3(-38, 2, -5);
@@ -39,13 +25,27 @@ export class MotionEngine {
     this.endFov = 46;
   }
 
+  stopIntro() {
+    this.introActive = false;
+    const overlay = document.querySelector('.intro-overlay');
+    if (overlay) {
+      animate(overlay, { opacity: [1, 0] }, { duration: 0.3 }).finished.then(() => {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      });
+    }
+    if (this.app.cosmicLabels) {
+      this.app.cosmicLabels.setOpacity(0.95);
+    }
+  }
+
   /**
    * Starts the cinematic flythrough intro sequence
    */
   async playIntroSequence() {
-    // 1. Create full-screen dark title card overlay
+    // 1. Create full-screen dark title card overlay with pointer-events: none
     const overlay = document.createElement('div');
     overlay.className = 'intro-overlay';
+    overlay.style.pointerEvents = 'none';
 
     const title = document.createElement('div');
     title.className = 'intro-title';
