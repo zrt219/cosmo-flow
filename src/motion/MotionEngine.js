@@ -267,11 +267,14 @@ export class MotionEngine {
    */
   animatePresetButton(button) {
     if (!button) return;
-    animate(
-      button,
-      { transform: ['scale(0.92)', 'scale(1.0)'] },
-      { duration: 0.35, easing: spring({ stiffness: 420, damping: 14 }) }
-    );
+    try {
+      button.style.transform = 'scale(0.93)';
+      setTimeout(() => {
+        button.style.transform = '';
+      }, 150);
+    } catch (e) {
+      // Safe fallback
+    }
   }
 
   /**
@@ -279,11 +282,14 @@ export class MotionEngine {
    */
   animateButtonPress(element) {
     if (!element) return;
-    animate(
-      element,
-      { transform: ['scale(0.94)', 'scale(1.0)'] },
-      { duration: 0.28, easing: spring({ stiffness: 450, damping: 15 }) }
-    );
+    try {
+      element.style.transform = 'scale(0.94)';
+      setTimeout(() => {
+        element.style.transform = '';
+      }, 150);
+    } catch (e) {
+      // Safe fallback
+    }
   }
 
   /**
@@ -291,17 +297,20 @@ export class MotionEngine {
    */
   animatePillSelect(pill, pillGroup) {
     if (!pill) return;
-    if (pillGroup) {
-      pillGroup.querySelectorAll('.rec-pill').forEach(p => {
-        if (p !== pill) p.classList.remove('active');
-      });
+    try {
+      if (pillGroup) {
+        pillGroup.querySelectorAll('.rec-pill').forEach(p => {
+          if (p !== pill) p.classList.remove('active');
+        });
+      }
+      pill.classList.add('active');
+      pill.style.transform = 'scale(1.08)';
+      setTimeout(() => {
+        pill.style.transform = '';
+      }, 150);
+    } catch (e) {
+      // Safe fallback
     }
-    pill.classList.add('active');
-    animate(
-      pill,
-      { transform: ['scale(1.12)', 'scale(1.0)'] },
-      { duration: 0.3, easing: spring({ stiffness: 400, damping: 16 }) }
-    );
   }
 
   /**
@@ -313,25 +322,23 @@ export class MotionEngine {
     }
     if (!this.recDockPanel) return;
 
-    if (action === 'startRecording') {
-      const btnRecord = document.getElementById('btn-record-gif');
-      if (btnRecord) {
-        animate(
-          btnRecord,
-          { transform: ['scale(0.95)', 'scale(1.02)', 'scale(1.0)'] },
-          { duration: 0.4, easing: spring({ stiffness: 350, damping: 14 }) }
-        );
+    try {
+      if (action === 'startRecording') {
+        const btnRecord = document.getElementById('btn-record-gif');
+        if (btnRecord) {
+          btnRecord.style.transform = 'scale(0.96)';
+          setTimeout(() => {
+            btnRecord.style.transform = '';
+          }, 200);
+        }
+      } else if (action === 'showProgress') {
+        const prog = document.getElementById('rec-progress-container');
+        if (prog) {
+          prog.style.display = 'block';
+        }
       }
-    } else if (action === 'showProgress') {
-      const prog = document.getElementById('rec-progress-container');
-      if (prog) {
-        prog.style.display = 'block';
-        animate(
-          prog,
-          { opacity: [0, 1], transform: ['translateY(8px)', 'translateY(0)'] },
-          { duration: 0.3, easing: 'ease-out' }
-        );
-      }
+    } catch (e) {
+      // Safe fallback
     }
   }
 
@@ -341,24 +348,6 @@ export class MotionEngine {
   showModal(overlayEl) {
     if (!overlayEl) return;
     overlayEl.style.display = 'flex';
-
-    animate(
-      overlayEl,
-      { opacity: [0, 1], backdropFilter: ['blur(0px)', 'blur(16px)'] },
-      { duration: 0.32, easing: 'ease-out' }
-    );
-
-    const card = overlayEl.querySelector('.rec-modal-card');
-    if (card) {
-      animate(
-        card,
-        {
-          opacity: [0, 1],
-          transform: ['scale(0.86) translateY(24px)', 'scale(1.0) translateY(0)']
-        },
-        { duration: 0.45, easing: spring({ stiffness: 320, damping: 20 }) }
-      );
-    }
   }
 
   /**
@@ -366,26 +355,7 @@ export class MotionEngine {
    */
   hideModal(overlayEl) {
     if (!overlayEl) return;
-
-    const card = overlayEl.querySelector('.rec-modal-card');
-    if (card) {
-      animate(
-        card,
-        {
-          opacity: [1, 0],
-          transform: ['scale(1.0) translateY(0)', 'scale(0.88) translateY(18px)']
-        },
-        { duration: 0.25, easing: 'ease-in' }
-      );
-    }
-
-    animate(
-      overlayEl,
-      { opacity: [1, 0], backdropFilter: ['blur(16px)', 'blur(0px)'] },
-      { duration: 0.28, easing: 'ease-in' }
-    ).finished.then(() => {
-      overlayEl.style.display = 'none';
-    });
+    overlayEl.style.display = 'none';
   }
 }
 

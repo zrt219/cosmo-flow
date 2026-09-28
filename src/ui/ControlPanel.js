@@ -348,81 +348,81 @@ export class ControlPanel {
 
     if (btnRef) {
       btnRef.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRef);
         this.applyPreset('Reference (Tully 2014)');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRef);
       });
     }
 
     if (btnAttractor) {
       btnAttractor.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnAttractor);
         this.applyPreset('The Great Attractor Core');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnAttractor);
       });
     }
 
     if (btnVirgo) {
       btnVirgo.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnVirgo);
         this.applyPreset('Virgo Cluster');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnVirgo);
       });
     }
 
     if (btnComa) {
       btnComa.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnComa);
         this.applyPreset('Coma Fountain Arch');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnComa);
       });
     }
 
     if (btnCentaurus) {
       btnCentaurus.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnCentaurus);
         this.applyPreset('Centaurus Cluster Core');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnCentaurus);
       });
     }
 
     if (btnMilkyWay) {
       btnMilkyWay.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnMilkyWay);
         this.applyPreset('Milky Way / Local Group');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnMilkyWay);
       });
     }
 
     if (btnHydra) {
       btnHydra.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnHydra);
         this.applyPreset('Hydra Cluster');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnHydra);
       });
     }
 
     if (btnAntlia) {
       btnAntlia.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnAntlia);
         this.applyPreset('Antlia Cluster');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnAntlia);
       });
     }
 
     if (btnRepeller) {
       btnRepeller.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRepeller);
         this.applyPreset('Dipole Repeller Outflow');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnRepeller);
       });
     }
 
     if (btnTop) {
       btnTop.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnTop);
         this.applyPreset('Top-Down Supergalactic Plane');
+        if (this.app.motionEngine) this.app.motionEngine.animatePresetButton(btnTop);
       });
     }
 
     if (btnFlow) {
       btnFlow.addEventListener('click', () => {
-        if (this.app.motionEngine) this.app.motionEngine.animateButtonPress(btnFlow);
         const nextState = !this.app.streamlineRenderer.isAnimated;
         this.app.streamlineRenderer.isAnimated = nextState;
         if (this.streamParams) this.streamParams.isAnimated = nextState;
         this.app.updateFlowButtonState(nextState);
+        if (this.app.motionEngine) this.app.motionEngine.animateButtonPress(btnFlow);
       });
     }
   }
