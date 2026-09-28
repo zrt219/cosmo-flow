@@ -8,6 +8,10 @@
 [![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
+<p align="center">
+  <img src="docs/assets/laniakea_hero_banner.jpg" alt="CosmoFlow Laniakea Supercluster 3D Hero Banner" width="100%" />
+</p>
+
 ---
 
 ## 🚀 Live Interactive Demo
