@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:gifs": "node scripts/generate_readme_gifs.mjs",
+    "generate:linkedin": "node scripts/generate_linkedin_campaign.mjs"
   },
   "dependencies": {
     "gifenc": "^1.0.3",
