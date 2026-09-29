@@ -47,6 +47,8 @@ class LaniakeaApp {
     // Start in standard Reference view
     this.setReferenceCamera(true);
 
+    window.app = this;
+
     this.animate = this.animate.bind(this);
     requestAnimationFrame(this.animate);
   }
